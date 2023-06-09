@@ -19,7 +19,8 @@ ARG CODE_GID="100"
 
 USER root
 
-# Install all OS dependencies for fully functional notebook server
+# Install all OS dependencies
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
     apt-get install --yes --no-install-recommends \
@@ -38,6 +39,22 @@ RUN apt-get update --yes && \
     # Terminal Customization
     zsh && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/home/${NB_USER}/.local/bin:${PATH}" \
+    HOME="/home/${NB_USER}"
+
+# Copy a script that we will use to correct permissions after running certain commands
+COPY fix-permissions /usr/local/bin/fix-permissions
+RUN chmod a+rx /usr/local/bin/fix-permissions
+
+# Create CODE_USER with name jovyan user with UID=1000 and in the 'users' group
+# and make sure these dirs are writable by the `users` group.
+RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
+    sed -i.bak -e 's/^%admin/#%admin/' /etc/sudoers && \
+    sed -i.bak -e 's/^%sudo/#%sudo/' /etc/sudoers && \
+    useradd -l -m -s /bin/bash -N -u "${CODE_UID}" "${CODE_USER}" && \
+    chmod g+w /etc/passwd && \
+    fix-permissions "${HOME}"
 
 # Create alternative for nano -> nano-tiny
 RUN update-alternatives --install /usr/bin/nano nano /bin/nano-tiny 10
@@ -79,6 +96,7 @@ RUN pip install --upgrade pip
 # set default shell
 ENV SHELL=/usr/bin/zsh
 
+WORKDIR "${HOME}"
 ###
 # ensure image runs as unpriveleged user by default.
 ###
