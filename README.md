@@ -30,7 +30,9 @@ As is, with no configuration
 
 ```json
 {
-  "image": "ghcr.io/iancleary/devcontainer:latest"
+  "image": "ghcr.io/iancleary/devcontainer:latest",
+  "remoteUser": "vscode"
+}
 }
 ```
 
@@ -40,7 +42,8 @@ With a Dockerfile in the `.devcontainer` folder
 {
   "build": {
     "dockerfile": "Dockerfile"
-  }
+  },
+  "remoteUser": "vscode"
 }
 ```
 
@@ -50,14 +53,39 @@ With a Dockerfile in the root of the project
 {
   "build": {
     "dockerfile": "../Dockerfile"
-  }
+  },
+  "remoteUser": "vscode"
 }
 ```
 
-Dockerfile contents
+Dockerfile contents, if customizing:
 
 ```Dockerfile
 FROM ghcr.io/iancleary/devcontainer:latest
 
-RUN commands
+USER root
+
+# install development packages
+RUN apt-get update --yes && \
+    apt-get upgrade --yes && \
+    apt-get install --yes --no-install-recommends \
+    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
+    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+    # Common useful utilities
+    software-properties-common \
+    python3-setuptools \
+    python3-apt \
+    python3-pip \
+    python3-venv \
+    python3.10-venv \
+    python3-pytest \
+    libpython3.10-dev \
+    python-is-python3 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+###
+# ensure image runs as unpriveleged user by default.
+###
+USER ${CODE_USER}
+
 ```
