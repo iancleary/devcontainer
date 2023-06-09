@@ -6,8 +6,8 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/iancleary/jupyterlab/actions/workflows/publish.yml" target="_blank">
-    <img src="https://github.com/iancleary/jupyterlab/actions/workflows/publish.yml/badge.svg?event=release" alt="Publish Workflow status on Release event">
+<a href="https://github.com/iancleary/devcontainer/actions/workflows/publish.yml" target="_blank">
+    <img src="https://github.com/iancleary/devcontainer/actions/workflows/publish.yml/badge.svg?event=release" alt="Publish Workflow status on Release event">
 </a>
 </p>
 <!-- markdownlint-enable MD033 -->
