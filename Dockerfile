@@ -89,13 +89,43 @@ RUN fix-permissions "/home/${CODE_USER}/.local/share/fonts" && \
     fix-permissions "/home/${CODE_USER}/.zshrc_aliases" && \
     fix-permissions "/home/${CODE_USER}/.p10k.zsh"
 
-USER ${CODE_UID}
+# install Python development packages
+RUN apt-get update --yes && \
+    apt-get upgrade --yes && \
+    apt-get install --yes --no-install-recommends \
+    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
+    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+    # Common useful utilities
+    software-properties-common \
+    python3-setuptools \
+    python3-apt \
+    python3-pip \
+    python3-venv \
+    python3.10-venv \
+    python3-pytest \
+    libpython3.10-dev \
+    python-is-python3 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+###
+# ensure image runs as unpriveleged user by default.
+###
+USER ${CODE_USER}
+
+# Upgrade pip, install pipx, and pipx install pre-commit and pdm
+# I generally like to contain development tools inside
+# a pre-commit config file, or a pdm project .venv
+RUN python3 -m pip install --upgrade --no-cache-dir pip && \
+    python3 -m pip install --user --no-cache-dir pipx && \
+    pipx install pre-commit && \
+    pipx install pdm
 
 # set default shell
 ENV SHELL=/usr/bin/zsh
 
 WORKDIR "${HOME}"
+
 ###
 # ensure image runs as unpriveleged user by default.
 ###
-USER ${CODE_UID}
+USER ${CODE_USER}
