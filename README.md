@@ -22,12 +22,42 @@ Images are built and pushed to DockerHub and GitHub container registery automati
 
 ## Custom Preferences
 
-I installed ohmyzsh, along with powerlevel10k, and the MesloLGS NF fonts.
+I installed ohmyzsh, along with powerlevel10k, and the MesloLGS NF fonts in the [Dockerfile](./Dockerfile).
 
-So if you want to use this as a base, the Dockerfile would be something like:
+## .devcontainer/devcontainer.json
+
+As is, with no configuration
+
+```json
+{
+  "image": "ghcr.io/iancleary/devcontainer:latest"
+}
+```
+
+With a Dockerfile in the `.devcontainer` folder
+
+```json
+{
+  "build": {
+    "dockerfile": "Dockerfile"
+  }
+}
+```
+
+With a Dockerfile in the root of the project
+
+```json
+{
+  "build": {
+    "dockerfile": "../Dockerfile"
+  }
+}
+```
+
+Dockerfile contents
 
 ```Dockerfile
-FROM iancleary/devcontainer
+FROM iancleary/devcontainer:latest
 
 RUN commands
 ```
