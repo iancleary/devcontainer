@@ -57,7 +57,7 @@ With a Dockerfile in the root of the project
 Dockerfile contents
 
 ```Dockerfile
-FROM iancleary/devcontainer:latest
+FROM ghcr.io/iancleary/devcontainer:latest
 
 RUN commands
 ```
