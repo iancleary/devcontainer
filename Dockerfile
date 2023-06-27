@@ -28,6 +28,7 @@ RUN apt-get update --yes && \
     #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
     # Common useful utilities
     git \
+    make \
     nano-tiny \
     tzdata \
     vim-tiny \
