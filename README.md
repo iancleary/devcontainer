@@ -33,7 +33,6 @@ As is, with no configuration
   "image": "ghcr.io/iancleary/devcontainer:latest",
   "remoteUser": "vscode"
 }
-}
 ```
 
 With a Dockerfile in the `.devcontainer` folder
