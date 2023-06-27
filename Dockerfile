@@ -89,20 +89,6 @@ RUN fix-permissions "/home/${CODE_USER}/.local/share/fonts" && \
     fix-permissions "/home/${CODE_USER}/.zshrc_aliases" && \
     fix-permissions "/home/${CODE_USER}/.p10k.zsh"
 
-# Install Nix
-RUN apt update --yes && \
-    apt install curl systemd --yes && \
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
-    --extra-conf "sandbox = false" \
-    --no-start-daemon \
-    --no-confirm && \
-    apt-get remove --yes curl && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
-RUN nix run nixpkgs#hello
-CMD [ "/bin/systemd" ]
-
-
 # install Python development packages
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
