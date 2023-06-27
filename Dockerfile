@@ -107,6 +107,11 @@ RUN apt-get update --yes && \
     python-is-python3 && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
+    apt-get install --yes --no-install-recommends \
+    nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 ###
 # ensure image runs as unpriveleged user by default.
 ###
@@ -120,7 +125,10 @@ RUN python3 -m pip install --upgrade --no-cache-dir pip && \
     pipx install pre-commit && \
     pipx install pdm
 
-# set default shell
+
+USER  root
+
+# set default shell after all other installation steps are done
 ENV SHELL=/usr/bin/zsh
 
 WORKDIR "${HOME}"
