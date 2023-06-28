@@ -32,6 +32,9 @@ RUN apt-get update --yes && \
     tzdata \
     vim-tiny \
     wget \
+    # for python install (add-apt-repository ppa:deadsnakes/ppa)
+    gnupg \
+    software-properties-common \
     # git-over-ssh
     openssh-client \
     # font for powerline10k
@@ -90,6 +93,7 @@ RUN fix-permissions "/home/${CODE_USER}/.local/share/fonts" && \
     fix-permissions "/home/${CODE_USER}/.p10k.zsh"
 
 # install Python development packages
+RUN add-apt-repository --yes ppa:deadsnakes/ppa 
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
     apt-get install --yes --no-install-recommends \
@@ -100,11 +104,21 @@ RUN apt-get update --yes && \
     python3-setuptools \
     python3-apt \
     python3-pip \
-    python3-venv \
+    # python3.10
+    python3.10 \
+    python3.10-dev \
     python3.10-venv \
-    python3-pytest \
     libpython3.10-dev \
+    # python3.11
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
+    libpython3.11-dev \
+    # helper alias
     python-is-python3 && \
+    # set python3.11 as default
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    # cleanup
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ###
@@ -115,10 +129,14 @@ USER ${CODE_USER}
 # Upgrade pip, install pipx, and pipx install pre-commit and pdm
 # I generally like to contain development tools inside
 # a pre-commit config file, or a pdm project .venv
-RUN python3 -m pip install --upgrade --no-cache-dir pip && \
-    python3 -m pip install --user --no-cache-dir pipx && \
+RUN python3.11 -m pip install --upgrade --no-cache-dir pip && \
+    python3.11 -m pip install --user --no-cache-dir pipx && \
+    python3.11 -m pipx ensurepath --force && \
     pipx install pre-commit && \
     pipx install pdm
+
+    # pipx install pre-commit && \
+    # pipx install pdm
 
 # set default shell
 ENV SHELL=/usr/bin/zsh
