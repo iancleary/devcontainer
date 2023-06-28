@@ -33,7 +33,6 @@ As is, with no configuration
   "image": "ghcr.io/iancleary/devcontainer:latest",
   "remoteUser": "vscode"
 }
-}
 ```
 
 With a Dockerfile in the `.devcontainer` folder
@@ -71,16 +70,10 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
     #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
-    # Common useful utilities
-    software-properties-common \
-    python3-setuptools \
-    python3-apt \
-    python3-pip \
-    python3-venv \
-    python3.10-venv \
-    python3-pytest \
-    libpython3.10-dev \
-    python-is-python3 && \
+    # ================================================
+    # ======= I'm using `cowsay` as an example =======
+    # ================================================
+    cowsay && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ###
