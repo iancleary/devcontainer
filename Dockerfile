@@ -124,11 +124,27 @@ RUN apt-get update --yes && \
 
 # Install NodeJS
 RUN apt-get update && \
-    apt-get install --yes curl && \
+    apt-get install --yes --no-install-recommends curl && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash && \
     apt-get install --yes --no-install-recommends nodejs && \
     apt-get remove --yes curl && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends build-essential curl && \
+    # https://github.com/rust-lang/rustup/issues/1031#issuecomment-354025515
+    # explains why `sh -s -- -y` is used to skip the prompts
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    . $HOME/.cargo/env && \
+    apt-get remove --yes build-essential && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/home/${CODE_USER}/.cargo/bin:${PATH}"
+
+# Install cargo crates
+RUN cargo install just && \
+    cargo install sd
 
 ###
 # ensure image runs as unpriveleged user by default.
@@ -143,8 +159,6 @@ RUN python3.11 -m pip install --upgrade --no-cache-dir pip && \
     python3.11 -m pipx ensurepath --force && \
     pipx install pre-commit && \
     pipx install pdm
-
-USER  root
 
 # set default shell after all other installation steps are done
 ENV SHELL=/usr/bin/zsh
