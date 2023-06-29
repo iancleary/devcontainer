@@ -44,7 +44,10 @@ RUN apt-get update --yes && \
     zsh && \
     # Install ca-certificates to fix SSL errors
     apt-get install --yes --no-install-recommends --reinstall ca-certificates && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    # cleanup
+    apt-get clean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV PATH="/home/${CODE_USER}/.local/bin:${PATH}" \
     HOME="/home/${CODE_USER}"
@@ -120,15 +123,20 @@ RUN apt-get update --yes && \
     # set python3.11 as default
     update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
     # cleanup
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get clean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install NodeJS
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends curl && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash && \
     apt-get install --yes --no-install-recommends nodejs && \
-    apt-get remove --yes curl && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get purge --yes curl && \
+    # cleanup
+    apt-get clean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Rust
 RUN apt-get update && \
@@ -137,8 +145,11 @@ RUN apt-get update && \
     # explains why `sh -s -- -y` is used to skip the prompts
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     . $HOME/.cargo/env && \
-    apt-get remove --yes build-essential && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    # apt-get purge --yes build-essential && \
+    # cleanup
+    apt-get clean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV PATH="/home/${CODE_USER}/.cargo/bin:${PATH}"
 
