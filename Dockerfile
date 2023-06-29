@@ -31,15 +31,15 @@ RUN apt-get update --yes && \
     make \
     nano-tiny \
     tzdata \
-    vim-tiny \
+    # vim-tiny \
     wget \
     # for python install (add-apt-repository ppa:deadsnakes/ppa)
     gnupg \
     software-properties-common \
     # git-over-ssh
-    openssh-client \
+    # openssh-client \
     # font for powerline10k
-    fontconfig \
+    # fontconfig \
     # Terminal Customization
     zsh && \
     # Install ca-certificates to fix SSL errors
@@ -74,22 +74,22 @@ RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -
     mkdir -p ~/.oh-my-zsh/custom/themes && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k && \
     git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting && \
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
-    mkdir -p ~/.local/share/fonts && \
-    cd ~/.local/share/fonts && \
-    wget -O 'MesloLGS NF Regular.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
-    wget -O 'MesloLGS NF Bold.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
-    wget -O 'MesloLGS NF Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
-    wget -O 'MesloLGS NF Bold Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
-    fc-cache -f -v
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    # mkdir -p ~/.local/share/fonts && \
+    # cd ~/.local/share/fonts && \
+    # wget -O 'MesloLGS NF Regular.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
+    # wget -O 'MesloLGS NF Bold.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
+    # wget -O 'MesloLGS NF Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
+    # wget -O 'MesloLGS NF Bold Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
+    # fc-cache -f -v
 
 COPY custom/.zshrc custom/.zshrc_aliases custom/.p10k.zsh /home/${CODE_USER}/
 
 USER root
 
 # Fix permissions on custom files and files needed to set overrides
-RUN fix-permissions "/home/${CODE_USER}/.local/share/fonts" && \
-    fix-permissions "/home/${CODE_USER}/.zshrc" && \
+# RUN fix-permissions "/home/${CODE_USER}/.local/share/fonts" && \
+RUN fix-permissions "/home/${CODE_USER}/.zshrc" && \
     fix-permissions "/home/${CODE_USER}/.zshrc_aliases" && \
     fix-permissions "/home/${CODE_USER}/.p10k.zsh"
 
@@ -162,8 +162,6 @@ RUN python3.11 -m pip install --upgrade --no-cache-dir pip && \
 
 # set default shell after all other installation steps are done
 ENV SHELL=/usr/bin/zsh
-
-WORKDIR "${HOME}"
 
 ###
 # ensure image runs as unpriveleged user by default.
