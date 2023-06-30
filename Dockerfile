@@ -146,6 +146,8 @@ RUN apt-get update && \
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
     . $HOME/.cargo/env && \
     # apt-get purge --yes build-essential && \
+    # keep build-essential for now to allow cargo installs to compile
+    # there probably is a specific package that is needed (if build-essential is a meta-package)
     # cleanup
     apt-get clean && \
     apt-get autoremove --yes && \
