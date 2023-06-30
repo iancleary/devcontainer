@@ -36,8 +36,8 @@ RUN apt-get update --yes && \
     # for python install (add-apt-repository ppa:deadsnakes/ppa)
     gnupg \
     software-properties-common \
-    # git-over-ssh
-    # openssh-client \
+    # git-over-ssh (needed when using terminal and devcontainer in VS Code)
+    openssh-client \
     # font for powerline10k
     # fontconfig \
     # Terminal Customization
