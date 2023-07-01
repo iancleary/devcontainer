@@ -20,6 +20,15 @@ Images are built and pushed to DockerHub and GitHub container registery automati
 
 <https://code.visualstudio.com/docs/devcontainers/create-dev-container>
 
+## Custom Software
+
+Python, node, npm, rust, pipx, pre-commit, pdm are installed in the [Dockerfile](./Dockerfile).
+
+This image is used for development of Python, Rust, and Node projects.
+I prefer to keep my operating system clean and use containers for development.
+
+One could make separate images for each language, but I prefer to have one image for all my development needs as the size of this alpine based image is small enough for my needs.
+
 ## Custom Preferences
 
 I installed ohmyzsh, along with powerlevel10k, and the MesloLGS NF fonts in the [Dockerfile](./Dockerfile).
