@@ -64,12 +64,15 @@ FROM ghcr.io/iancleary/devcontainer:latest
 
 USER root
 
-# install development packages
+# install alpine packages with apk
 RUN apk add --no-cache \
-    # ================================================
-    # ======= I'm using `cowsay` as an example =======
-    # ================================================
-    cowsay 
+    # ========================================================
+    # ======= I'm using `tzdata` as an example =================
+    # ========================================================
+    tzdata 
+
+# Search for packages here
+# https://pkgs.alpinelinux.org/packages?name=&branch=v3.18
 
 ###
 # ensure image runs as unpriveleged user by default.
