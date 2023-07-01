@@ -31,7 +31,9 @@ One could make separate images for each language, but I prefer to have one image
 
 ## Custom Preferences
 
-I installed ohmyzsh, along with powerlevel10k, and the MesloLGS NF fonts in the [Dockerfile](./Dockerfile).
+I installed ohmyzsh, along with powerlevel10k in the [Dockerfile](./Dockerfile).
+
+For powerlevel10k, the [fonts](https://github.com/romkatv/powerlevel10k#manual-font-installation) needs to be installed on the host/client machine, not inside the container.
 
 ## .devcontainer/devcontainer.json
 
