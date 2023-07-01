@@ -1,179 +1,89 @@
 # Copyright (c) Ian Cleary (he/him/his).
 # Distributed under the terms of the MIT License.
 
-# Inspiration for this Dockerfile pattern comes from the following sources:
-# # https://github.com/jupyter/docker-stacks/blob/main/docker-stacks-foundation/Dockerfile
-# # Copyright (c) Jupyter Development Team.
-# # Distributed under the terms of the Modified BSD License.
+# https://hub.docker.com/_/alpine
+ARG ROOT_CONTAINER=alpine:3.18
 
-# Ubuntu 22.04 (jammy)
-# https://hub.docker.com/_/ubuntu/tags?page=1&name=jammy
-ARG ROOT_CONTAINER=ubuntu:22.04
+# PERHAPS USE RUST'S ALPINE IMAGE INSTEAD?
 
 FROM $ROOT_CONTAINER
 
-LABEL maintainer="Ian Cleary <github@iancleary.master>"
+LABEL maintainer="Ian Cleary <github@iancleary.me>"
 ARG CODE_USER="vscode"
 ARG CODE_UID="1000"
-ARG CODE_GID="100"
+ARG CODE_GID="1000"
 
-USER root
 
 # Install all OS dependencies
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update --yes && \
-    apt-get upgrade --yes && \
-    apt-get install --yes --no-install-recommends \
-    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
-    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
-    # Common useful utilities
+# https://pkgs.alpinelinux.org/packages?branch=v3.18
+
+RUN apk add --no-cache \
+    curl \
     git \
     make \
-    nano-tiny \
-    tzdata \
-    # vim-tiny \
+    nano \
+    openssh \
     wget \
-    # for python install (add-apt-repository ppa:deadsnakes/ppa)
-    gnupg \
-    software-properties-common \
-    # git-over-ssh
-    # openssh-client \
-    # font for powerline10k
-    # fontconfig \
-    # Terminal Customization
-    zsh && \
-    # Install ca-certificates to fix SSL errors
-    apt-get install --yes --no-install-recommends --reinstall ca-certificates && \
-    # cleanup
-    apt-get clean && \
-    apt-get autoremove --yes && \
-    rm -rf /var/lib/apt/lists/*
+    zsh
 
-ENV PATH="/home/${CODE_USER}/.local/bin:${PATH}" \
-    HOME="/home/${CODE_USER}"
+RUN apk add --no-cache \
+    nodejs \
+    npm
 
-# Copy a script that we will use to correct permissions after running certain commands
-COPY fix-permissions /usr/local/bin/fix-permissions
-RUN chmod a+rx /usr/local/bin/fix-permissions
-
-# Create CODE_USER with name jovyan user with UID=1000 and in the 'users' group
-# and make sure these dirs are writable by the `users` group.
-RUN useradd -l -m -s /bin/bash -N -u "${CODE_UID}" "${CODE_USER}" && \
-    usermod -aG sudo "${CODE_USER}" && \
-    fix-permissions "${HOME}"
-
-# Create alternative for nano -> nano-tiny
-RUN update-alternatives --install /usr/bin/nano nano /bin/nano-tiny 10
-
-# Switch back to jovyan to avoid accidental container runs as root
-USER ${CODE_UID}
-
-## Oh My ZSH and Powerlevel10k
-## See https://github.com/iancleary/ansible-role-ohmyzsh
-USER $CODE_UID
-# run the installation script
-RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true && \
-    mkdir -p ~/.oh-my-zsh/custom/plugins && \
-    mkdir -p ~/.oh-my-zsh/custom/themes && \
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k && \
-    git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting && \
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    # mkdir -p ~/.local/share/fonts && \
-    # cd ~/.local/share/fonts && \
-    # wget -O 'MesloLGS NF Regular.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
-    # wget -O 'MesloLGS NF Bold.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
-    # wget -O 'MesloLGS NF Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
-    # wget -O 'MesloLGS NF Bold Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
-    # fc-cache -f -v
-
-COPY custom/.zshrc custom/.zshrc_aliases custom/.p10k.zsh /home/${CODE_USER}/
-
-USER root
-
-# Fix permissions on custom files and files needed to set overrides
-# RUN fix-permissions "/home/${CODE_USER}/.local/share/fonts" && \
-RUN fix-permissions "/home/${CODE_USER}/.zshrc" && \
-    fix-permissions "/home/${CODE_USER}/.zshrc_aliases" && \
-    fix-permissions "/home/${CODE_USER}/.p10k.zsh"
-
-# install Python development packages
-RUN add-apt-repository --yes ppa:deadsnakes/ppa 
-RUN apt-get update --yes && \
-    apt-get upgrade --yes && \
-    apt-get install --yes --no-install-recommends \
-    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
-    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
-    # Common useful utilities
-    software-properties-common \
-    python3-setuptools \
-    python3-apt \
-    python3-pip \
-    # python3.10
-    python3.10 \
-    python3.10-dev \
-    python3.10-venv \
-    libpython3.10-dev \
-    # python3.11
-    python3.11 \
-    python3.11-dev \
-    python3.11-venv \
-    libpython3.11-dev \
-    # helper alias
-    python-is-python3 && \
-    # set python3.11 as default
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
-    # cleanup
-    apt-get clean && \
-    apt-get autoremove --yes && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install NodeJS
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends curl && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash && \
-    apt-get install --yes --no-install-recommends nodejs && \
-    apt-get purge --yes curl && \
-    # cleanup
-    apt-get clean && \
-    apt-get autoremove --yes && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Rust
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends build-essential curl && \
-    # https://github.com/rust-lang/rustup/issues/1031#issuecomment-354025515
-    # explains why `sh -s -- -y` is used to skip the prompts
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    . $HOME/.cargo/env && \
-    # apt-get purge --yes build-essential && \
-    # keep build-essential for now to allow cargo installs to compile
-    # there probably is a specific package that is needed (if build-essential is a meta-package)
-    # cleanup
-    apt-get clean && \
-    apt-get autoremove --yes && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/home/${CODE_USER}/.cargo/bin:${PATH}"
+RUN apk add --no-cache \
+    cargo \
+    rust
 
 # Install cargo crates
 RUN cargo install just && \
     cargo install sd
 
-###
-# ensure image runs as unpriveleged user by default.
-###
+RUN apk add --no-cache \
+    python3 \
+    python3-dev \
+    py3-pip \
+    bash
+
+# # Create CODE_USER with name jovyan user with UID=1000 and in the 'users' group
+# # and make sure these dirs are writable by the `users` group.
+RUN adduser -u "${CODE_UID}" "${CODE_USER}" --disabled-password
+
+
+ENV PATH="/home/${CODE_USER}/.local/bin:${PATH}" \
+#     PATH="/home/${CODE_USER}/.cargo/bin:${PATH}" \
+    HOME="/home/${CODE_USER}"
+
+# ###
+# # ensure image runs as unpriveleged user by default.
+# ###
 USER ${CODE_USER}
 
 # Upgrade pip, install pipx, and pipx install pre-commit and pdm
 # I generally like to contain development tools inside
 # a pre-commit config file, or a pdm project .venv
-RUN python3.11 -m pip install --upgrade --no-cache-dir pip && \
+RUN python3.11 -m pip install --user --upgrade --no-cache-dir pip && \
     python3.11 -m pip install --user --no-cache-dir pipx && \
     python3.11 -m pipx ensurepath --force && \
     pipx install pre-commit && \
     pipx install pdm
 
-# set default shell after all other installation steps are done
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    mkdir -p ~/.oh-my-zsh/custom/plugins && \
+    mkdir -p ~/.oh-my-zsh/custom/themes && \
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k && \
+    git clone --depth=1 https://github.com/zdharma-continuum/fast-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/fast-syntax-highlighting && \
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+#     # mkdir -p ~/.local/share/fonts && \
+#     # cd ~/.local/share/fonts && \
+#     # wget -O 'MesloLGS NF Regular.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf && \
+#     # wget -O 'MesloLGS NF Bold.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf && \
+#     # wget -O 'MesloLGS NF Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf && \
+#     # wget -O 'MesloLGS NF Bold Italic.ttf' https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf && \
+#     # fc-cache -f -v
+
+COPY custom/.zshrc custom/.zshrc_aliases custom/.p10k.zsh /home/${CODE_USER}/
+
+# # set default shell after all other installation steps are done
 ENV SHELL=/usr/bin/zsh
 
 ###
