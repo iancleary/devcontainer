@@ -65,16 +65,11 @@ FROM ghcr.io/iancleary/devcontainer:latest
 USER root
 
 # install development packages
-RUN apt-get update --yes && \
-    apt-get upgrade --yes && \
-    apt-get install --yes --no-install-recommends \
-    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
-    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
+RUN apk add --no-cache \
     # ================================================
     # ======= I'm using `cowsay` as an example =======
     # ================================================
-    cowsay && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    cowsay 
 
 ###
 # ensure image runs as unpriveleged user by default.
