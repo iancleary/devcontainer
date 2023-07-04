@@ -17,6 +17,7 @@ ARG CODE_GID="1000"
 # Base packages
 RUN apk add --no-cache \
     bash \
+    build-base \
     curl \
     git \
     just \
