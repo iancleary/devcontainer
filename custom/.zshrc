@@ -100,6 +100,10 @@ if [ -f $HOME/.zshrc_aliases ]; then
     . $HOME/.zshrc_aliases
 fi
 
+# CDPATH for zsh
+setopt auto_cd
+cdpath=(.. /workspace $HOME)
+
 ### ----------------------------------------------
 # Please add per application scripts to the
 # /etc/profile.d/ folder as *.sh files.
