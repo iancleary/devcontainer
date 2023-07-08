@@ -41,7 +41,7 @@ As is, with no configuration
 
 ```json
 {
-  "image": "ghcr.io/iancleary/devcontainer:v0.0.19",
+  "image": "ghcr.io/iancleary/devcontainer:tag",
   "remoteUser": "vscode"
 }
 ```
@@ -71,7 +71,7 @@ With a Dockerfile in the root of the project
 Dockerfile contents, if customizing:
 
 ```Dockerfile
-FROM ghcr.io/iancleary/devcontainer:latest
+FROM ghcr.io/iancleary/devcontainer:tag
 
 USER root
 
