@@ -41,7 +41,7 @@ As is, with no configuration
 
 ```json
 {
-  "image": "ghcr.io/iancleary/devcontainer:latest",
+  "image": "ghcr.io/iancleary/devcontainer:v0.0.19",
   "remoteUser": "vscode"
 }
 ```
