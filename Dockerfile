@@ -1,8 +1,8 @@
 # Copyright (c) Ian Cleary (he/him/his).
 # Distributed under the terms of the MIT License.
 
-# https://hub.docker.com/_/rust
-ARG ROOT_CONTAINER=alpine3.18
+# https://hub.docker.com/_/alpine/
+ARG ROOT_CONTAINER=alpine:3.18
 
 FROM $ROOT_CONTAINER
 
@@ -37,21 +37,27 @@ RUN apk add --no-cache \
     zsh --version
 
 # Nix and direnv
-# https://determinate.systems/posts/nix-direnv
-RUN apk add --no-cache \
-    # https://direnv.net/
-    direnv && \
-    direnv --version && 
-    ## https://github.com/DeterminateSystems/nix-installer#the-determinate-nix-installer
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install && \
-    nix --version
+## https://determinate.systems/posts/nix-direnv
+## https://direnv.net/
+## https://github.com/DeterminateSystems/nix-installer#the-determinate-nix-installer
 
+RUN apk add --no-cache \
+    direnv && \ 
+    direnv --version && \
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
+    --extra-conf "sandbox = false" \
+    --init none \
+    --no-confirm
+
+ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
+RUN nix run nixpkgs#hello
 # # Create CODE_USER with name jovyan user with UID=1000 and in the 'users' group
 # # and make sure these dirs are writable by the `users` group.
 RUN adduser -u "${CODE_UID}" "${CODE_USER}" --disabled-password
 
 # Setup home directory and path
 ENV PATH="/home/${CODE_USER}/.local/bin:${PATH}" \
+    PATH="/home/${CODE_USER}/.cargo/bin:${PATH}" \
     HOME="/home/${CODE_USER}"
 
 ###
