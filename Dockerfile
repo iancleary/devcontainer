@@ -77,3 +77,7 @@ ENV SHELL=/usr/bin/zsh
 # ensure image runs as unpriveleged user by default.
 ###
 USER ${CODE_USER}
+
+# https://determinate.systems/posts/nix-direnv
+#https://direnv.net/docs/installation.html
+ENTRYPOINT [ "direnv allow" ]

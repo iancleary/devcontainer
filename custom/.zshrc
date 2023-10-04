@@ -104,6 +104,10 @@ fi
 setopt auto_cd
 cdpath=(.. /workspace $HOME)
 
+# https://direnv.net/docs/hook.html
+eval "$(direnv hook zsh)"
+
+
 ### ----------------------------------------------
 # Please add per application scripts to the
 # /etc/profile.d/ folder as *.sh files.
