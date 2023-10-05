@@ -10,16 +10,16 @@ FROM $ROOT_CONTAINER
 LABEL maintainer="Ian Cleary <github@iancleary.me>"
 ARG USER="root"
 
-# Install all OS dependencies
-# https://pkgs.alpinelinux.org/packages?branch=v3.18
-
-# Base packages
-RUN apt-get update && apt-get install -y \
+# Install all OS dependencies for Server that starts
+# but lacks all features (e.g., download as all possible file formats)
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update --yes && \
+    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
+    apt-get upgrade --yes && \
+    apt-get install --yes --no-install-recommends \
     bash \
-    build-base \
     curl \
     git \
-    just \
     make \
     nano \
     openssh \
@@ -33,16 +33,21 @@ RUN apt-get update && apt-get install -y \
     nano --version && \
     which ssh && \
     wget --version && \
-    zsh --version
+    zsh --version && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Nix and direnv
 ## https://determinate.systems/posts/nix-direnv
 ## https://direnv.net/
 ## https://github.com/DeterminateSystems/nix-installer#the-determinate-nix-installer
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update --yes && \
+    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
+    apt-get upgrade --yes && \
+    apt-get install --yes --no-install-recommends \
     direnv && \ 
-    direnv --version
+    direnv --version && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems/nix/tag/${VERSION}" | sh -s -- install \
     --extra-conf "sandbox = false" \
