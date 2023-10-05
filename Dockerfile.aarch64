@@ -1,7 +1,7 @@
 # Copyright (c) Ian Cleary (he/him/his).
 # Distributed under the terms of the MIT License.
 
-# g
+# https://hub.docker.com/r/arm64v8/debian
 ARG ROOT_CONTAINER=arm64v8/debian:12-slim
 # ARG NIX_INSTALLER_VERSION="v0.13.1"
 # ARG NIX_INSTALLER_ARCH="aarch64-linux"
