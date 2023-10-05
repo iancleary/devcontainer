@@ -7,9 +7,7 @@ ARG ROOT_CONTAINER=alpine:3.18
 FROM $ROOT_CONTAINER
 
 LABEL maintainer="Ian Cleary <github@iancleary.me>"
-ARG CODE_USER="vscode"
-ARG CODE_UID="1000"
-ARG CODE_GID="1000"
+ARG USER="root"
 
 # Install all OS dependencies
 # https://pkgs.alpinelinux.org/packages?branch=v3.18
@@ -50,20 +48,14 @@ RUN apk add --no-cache \
     --no-confirm
 
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
-RUN nix run nixpkgs#hello
-# # Create CODE_USER with name jovyan user with UID=1000 and in the 'users' group
-# # and make sure these dirs are writable by the `users` group.
-RUN adduser -u "${CODE_UID}" "${CODE_USER}" --disabled-password
+
+# Debug: confirm during build nix works
+# RUN nix run nixpkgs#hello
 
 # Setup home directory and path
-ENV PATH="/home/${CODE_USER}/.local/bin:${PATH}" \
-    PATH="/home/${CODE_USER}/.cargo/bin:${PATH}" \
-    HOME="/home/${CODE_USER}"
-
-###
-# ensure image runs as unpriveleged user by default.
-###
-USER ${CODE_USER}
+ENV PATH="/home/${USER}/.local/bin:${PATH}" \
+    PATH="/home/${USER}/.cargo/bin:${PATH}" \
+    HOME="/home/${USER}"
 
 # install oh-my-zsh, plugins, and themes
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
@@ -74,15 +66,10 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 # My preferences (copy over them if you want)
-COPY custom/.zshrc custom/.zshrc_aliases custom/.p10k.zsh /home/${CODE_USER}/
+COPY custom/.zshrc custom/.zshrc_aliases custom/.p10k.zsh /home/${USER}/
 
 # set default shell after all other installation steps are done
 ENV SHELL=/usr/bin/zsh
-
-###
-# ensure image runs as unpriveleged user by default.
-###
-USER ${CODE_USER}
 
 # https://determinate.systems/posts/nix-direnv
 #https://direnv.net/docs/installation.html
