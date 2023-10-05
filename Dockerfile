@@ -28,7 +28,6 @@ RUN apt-get update --yes && \
     bash --version && \
     curl --version && \
     git --version && \
-    just --version && \
     make --version && \
     nano --version && \
     which ssh && \
