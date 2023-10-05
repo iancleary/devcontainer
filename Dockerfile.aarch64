@@ -4,7 +4,7 @@
 # https://hub.docker.com/_/alpine/
 ARG ROOT_CONTAINER=arm64v8/debian:12-slim
 ARG NIX_INSTALLER_VERSION="v0.13.1"
-ARG NIX_INSTALLER_ARCH = "aarch64-linux"
+ARG NIX_INSTALLER_ARCH="aarch64-linux"
 
 FROM $ROOT_CONTAINER
 
