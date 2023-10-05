@@ -52,7 +52,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
 
 # Debug: confirm during build nix works
-# RUN nix run nixpkgs#hello
+RUN nix run nixpkgs#hello
 
 # Setup home directory and path
 ENV PATH="/home/${USER}/.local/bin:${PATH}" \
