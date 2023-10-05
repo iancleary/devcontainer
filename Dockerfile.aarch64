@@ -3,8 +3,8 @@
 
 # https://hub.docker.com/_/alpine/
 ARG ROOT_CONTAINER=arm64v8/debian:12-slim
-ARG NIX_INSTALLER_VERSION="v0.13.1"
-ARG NIX_INSTALLER_ARCH="aarch64-linux"
+# ARG NIX_INSTALLER_VERSION="v0.13.1"
+# ARG NIX_INSTALLER_ARCH="aarch64-linux"
 
 FROM $ROOT_CONTAINER
 
@@ -52,22 +52,10 @@ RUN apt-get update --yes && \
     direnv --version && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# # # # https://github.com/DeterminateSystems/nix-installer/releases/download/v0.13.1/nix-installer-aarch64-linux
-# # RUN curl -sSf -L "https://github.com/DeterminateSystems/nix-installer/releases/download/${NIX_INSTALLER_VERSION}/nix-installer-${NIX_INSTALLER_ARCH}" | sh -s -- install \
-# #     --extra-conf "sandbox = false" \
-# #     --init none \
-# #     --no-confirm
-
-
-
-# ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
-
-# # Debug: confirm during build nix works
-# RUN nix run nixpkgs#hello
-
 # https://github.com/DeterminateSystems/nix-installer#in-a-container
+# https://github.com/DeterminateSystems/nix-installer/issues/324#issuecomment-1481688122
 RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
-  --extra-conf "sandbox = false" \
+  --extra-conf "filter-syscalls = false" \
   --init none \
   --no-confirm
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"

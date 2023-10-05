@@ -3,7 +3,7 @@
 
 # https://hub.docker.com/_/alpine/
 ARG ROOT_CONTAINER=amd64/debian:12-slim
-ARG NIX_INSTALLER_VERSION="v0.13.1"
+# ARG NIX_INSTALLER_VERSION="v0.13.1"
 
 FROM $ROOT_CONTAINER
 
@@ -42,7 +42,6 @@ RUN apt-get update --yes && \
 ## https://determinate.systems/posts/nix-direnv
 ## https://direnv.net/
 ## https://github.com/DeterminateSystems/nix-installer#the-determinate-nix-installer
-
 RUN apt-get update --yes && \
     # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
     apt-get upgrade --yes && \
@@ -57,9 +56,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/
   --init none \
   --no-confirm
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
-RUN nix run nixpkgs#hello
-
-# Debug: confirm during build nix works
 RUN nix run nixpkgs#hello
 
 # Setup home directory and path
