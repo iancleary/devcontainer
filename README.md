@@ -46,7 +46,7 @@ As is, with no configuration
 ```json
 {
   "image": "ghcr.io/iancleary/devcontainer:tag",
-  "remoteUser": "vscode"
+  "remoteUser": "root"
 }
 ```
 
@@ -57,7 +57,7 @@ With a Dockerfile in the `.devcontainer` folder
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "remoteUser": "vscode"
+  "remoteUser": "root"
 }
 ```
 
@@ -68,7 +68,7 @@ With a Dockerfile in the root of the project
   "build": {
     "dockerfile": "../Dockerfile"
   },
-  "remoteUser": "vscode"
+  "remoteUser": "root"
 }
 ```
 
