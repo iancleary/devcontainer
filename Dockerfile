@@ -18,6 +18,7 @@ RUN apt-get update --yes && \
     apt-get upgrade --yes && \
     apt-get install --yes --no-install-recommends \
     bash \
+    ca-certificates \
     curl \
     git \
     make \
