@@ -83,7 +83,7 @@ use flake .
 
 `flake.nix` example from [dev-templates]'s python directory
 
-```nix
+````nix
 {
   description = "A Nix-flake-based Python development environment";
 
@@ -144,30 +144,7 @@ use flake .
         };
       });
 }
-```
-
-Dockerfile contents, if customizing the dockerfile (not recommended):
-
-```Dockerfile
-FROM ghcr.io/iancleary/devcontainer:tag
-
-USER root
-
-# install alpine packages with apk
-RUN apk add --no-cache \
-    # ========================================================
-    # ======= I'm using `tzdata` as an example =================
-    # ========================================================
-    tzdata
-
-# Search for packages here
-# https://pkgs.alpinelinux.org/packages?name=&branch=v3.18
-
-###
-# ensure image runs as unprivileged user by default.
-###
-USER ${CODE_USER}
-```
+```g
 
 [dev-templates]: https://github.com/iancleary/dev-templates
 [flakes]: https://nixos.wiki/wiki/Flakes
@@ -176,3 +153,4 @@ USER ${CODE_USER}
 [proto]: https://developers.google.com/protocol-buffers
 [python]: https://python.org
 [rust]: https://rust-lang.org
+````
