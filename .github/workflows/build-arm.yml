@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Build ARM64 Docker image
+name: Build ARM64Docker image
 
 on:
   pull_request:
@@ -54,6 +54,7 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
         with:
           context: .
+          file: Dockerfile.aarch64
           platforms: linux/arm64
           push: false
           tags: ${{ steps.meta.outputs.tags }}
