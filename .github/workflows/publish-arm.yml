@@ -44,6 +44,8 @@ jobs:
           images: |
             iancleary/devcontainer
             ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
