@@ -51,17 +51,13 @@ RUN apt-get update --yes && \
     direnv --version && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems/nix/tag/${VERSION}" | sh -s -- install \
-    --extra-conf "sandbox = false" \
-    --init none \
-    --no-confirm
-
-# RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
-#   --extra-conf "sandbox = false" \
-#   --init none \
-#   --no-confirm
-
+# https://github.com/DeterminateSystems/nix-installer#in-a-container
+RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
+  --extra-conf "sandbox = false" \
+  --init none \
+  --no-confirm
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
+RUN nix run nixpkgs#hello
 
 # Debug: confirm during build nix works
 RUN nix run nixpkgs#hello
