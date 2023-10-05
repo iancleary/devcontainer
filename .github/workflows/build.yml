@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Build x86 Docker image
+name: Build amd64 Docker image
 
 on:
   pull_request:
