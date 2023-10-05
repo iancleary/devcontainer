@@ -7,15 +7,15 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Build amd64 Docker image
+name: Build arm64 Docker image
 
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  build_x86_image:
-    name: Build x86 Docker Image
+  build_arm64_image:
+    name: Build arm64 Docker Image
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -45,11 +45,17 @@ jobs:
             iancleary/devcontainer
             ghcr.io/${{ github.repository }}
 
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - name: Build and push Docker images
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09
         with:
           context: .
-          file: Dockerfile
+          file: Dockerfile.aarch64
+          platforms: linux/arm64
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
