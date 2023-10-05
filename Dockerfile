@@ -22,7 +22,7 @@ RUN apt-get update --yes && \
     git \
     make \
     nano \
-    openssh \
+    openssh-client \
     wget \
     zsh && \
     bash --version && \
