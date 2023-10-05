@@ -2,7 +2,7 @@
 # Distributed under the terms of the MIT License.
 
 # https://hub.docker.com/_/alpine/
-ARG ROOT_CONTAINER=alpine:3.18
+ARG ROOT_CONTAINER=amd64/debian:12-slim
 ARG NIX_INSTALLER_VERSION="v0.13.1"
 
 FROM $ROOT_CONTAINER
@@ -14,7 +14,7 @@ ARG USER="root"
 # https://pkgs.alpinelinux.org/packages?branch=v3.18
 
 # Base packages
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     bash \
     build-base \
     curl \
@@ -40,7 +40,7 @@ RUN apk add --no-cache \
 ## https://direnv.net/
 ## https://github.com/DeterminateSystems/nix-installer#the-determinate-nix-installer
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     direnv && \ 
     direnv --version
 
