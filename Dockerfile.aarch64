@@ -45,7 +45,7 @@ RUN apk add --no-cache \
     direnv && \ 
     direnv --version
 
-RUN curl -sSf -L https://github.com/DeterminateSystems/nix-installer/releases/download/${NIX_INSTALLER_VERSION}/nix-installer-${NIX_INSTALLER_ARCH} -o nix-installer
+RUN curl -sSf -L "https://github.com/DeterminateSystems/nix-installer/releases/download/${NIX_INSTALLER_VERSION}/nix-installer-${NIX_INSTALLER_ARCH}" -o nix-installer
 RUN ./nix-installer install --no-confirm
 
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
