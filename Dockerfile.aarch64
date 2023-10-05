@@ -48,10 +48,15 @@ RUN apk add --no-cache \
 # RUN curl -sSf -L "https://github.com/DeterminateSystems/nix-installer/releases/download/${NIX_INSTALLER_VERSION}/nix-installer-${NIX_INSTALLER_ARCH}" -o nix-installer
 # RUN ./nix-installer install --no-confirm
 
-RUN curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems/nix/tag/${VERSION}" | sh -s -- install \
-    --extra-conf "sandbox = false" \
-    --init none \
-    --no-confirm
+# RUN curl --proto '=https' --tlsv1.2 -sSf -L "https://install.determinate.systems/nix/tag/${VERSION}" | sh -s -- install \
+#     --extra-conf "sandbox = false" \
+#     --init none \
+#     --no-confirm
+
+RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
+  --extra-conf "sandbox = false" \
+  --init none \
+  --no-confirm
 
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
 
