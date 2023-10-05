@@ -1,7 +1,7 @@
 # Copyright (c) Ian Cleary (he/him/his).
 # Distributed under the terms of the MIT License.
 
-# https://hub.docker.com/_/alpine/
+# https://hub.docker.com/r/amd64/debian
 ARG ROOT_CONTAINER=amd64/debian:12-slim
 # ARG NIX_INSTALLER_VERSION="v0.13.1"
 
