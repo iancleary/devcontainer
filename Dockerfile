@@ -10,6 +10,8 @@ FROM $ROOT_CONTAINER
 LABEL maintainer="Ian Cleary <github@iancleary.me>"
 ARG USER="root"
 
+USER root
+
 # Install all OS dependencies for Server that starts
 # but lacks all features (e.g., download as all possible file formats)
 ENV DEBIAN_FRONTEND noninteractive
