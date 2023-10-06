@@ -10,11 +10,8 @@
 name: Build amd64 Docker image
 
 on:
-  push:
-    branches:
-      - "**"
-    tags:
-      - "v*.*.*"
+  release:
+    types: [published]
   pull_request:
     types: [opened, synchronize]
 
